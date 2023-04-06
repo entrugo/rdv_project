@@ -1,6 +1,9 @@
 package com.example.rdvmanager;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +33,12 @@ public class RDVAdapter extends RecyclerView.Adapter<RDVAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RDV rdv = rdvList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        RDV rdv = rdvList.get(holder.getAdapterPosition());
         holder.dateTextView.setText(rdv.getDate());
-        holder.timeTextView.setText(rdv.getTime());
-        holder.descriptionTextView.setText(rdv.getDescription());
 
         // Set onClickListener for editing an RDV
+        Context context = holder.itemView.getContext();;
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, EditRDVActivity.class);
             intent.putExtra("RDV_ID", rdv.getId());
@@ -44,27 +46,32 @@ public class RDVAdapter extends RecyclerView.Adapter<RDVAdapter.ViewHolder> {
         });
 
         // Set onLongClickListener for deleting an RDV
-        holder.itemView.setOnLongClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Do you want to delete this RDV?")
-                    .setPositiveButton("Yes", (dialogInterface, i) -> {
-                        // Delete RDV from database
-                        RDVDAO.deleteRDV(rdv.getId());
-
-                        // Remove RDV from RecyclerView
-                        rdvs.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, rdvs.size());
-                    })
-                    .setNegativeButton("No", null);
-            builder.create().show();
-            return true;
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Confirmation de suppression");
+                builder.setMessage("Êtes-vous sûr de vouloir supprimer ce RDV ?");
+                builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // supprimer le RDV de la base de données et de la liste
+                        RDVDAO rdvDAO = new RDVDAO(context);
+                        rdvDAO.deleteRDV(rdv);
+                        rdvList.remove(position);
+                        notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("Non", null);
+                builder.show();
+                return true;
+            }
         });
     }
 
     @Override
     public int getItemCount() {
-        return rdvs.size();
+        return rdvList.size();
     }
 
     public void updateRDVs(List<RDV> rdvList) {
@@ -75,22 +82,19 @@ public class RDVAdapter extends RecyclerView.Adapter<RDVAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titleTextView;
         private TextView dateTextView;
-        private TextView timeTextView;
         private TextView contactTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            titleTextView = itemView.findViewById(R.id.titleTextView);
-            dateTextView = itemView.findViewById(R.id.dateTextView);
-            timeTextView = itemView.findViewById(R.id.timeTextView);
-            contactTextView = itemView.findViewById(R.id.contactTextView);
+            titleTextView = itemView.findViewById(R.id.textview_rdv_title);
+            dateTextView = itemView.findViewById(R.id.textview_rdv_datetime);
+            contactTextView = itemView.findViewById(R.id.textview_rdv_contact);
         }
 
         public void bind(final RDV rdv, final OnItemClickListener listener) {
             titleTextView.setText(rdv.getTitle());
             dateTextView.setText(rdv.getDate());
-            timeTextView.setText(rdv.getTime());
             contactTextView.setText(rdv.getContact());
 
             itemView.setOnClickListener(new View.OnClickListener() {

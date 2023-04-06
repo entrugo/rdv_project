@@ -10,6 +10,7 @@ public class RDV {
     private int id;
     private String title;
     private String date;
+    private String description;
     private String time;
     private String contact;
     private String address;
@@ -122,5 +123,9 @@ public class RDV {
     public Uri getAddressUri() {
         String uri = "geo:0,0?q=" + getAddress();
         return Uri.parse(uri);
+    }
+
+    public String getDescription() {
+        return this.description;
     }
 }

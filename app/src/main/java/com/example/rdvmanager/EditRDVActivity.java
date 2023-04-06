@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class EditRDVActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class EditRDVActivity extends AppCompatActivity {
         mDescriptionEditText.setText(selectedRDV.getDescription());
 
         mLocationEditText = findViewById(R.id.edit_location);
-        mLocationEditText.setText(selectedRDV.getLocation());
+        mLocationEditText.setText(selectedRDV.getAddress());
 
         mDateEditText = findViewById(R.id.edit_date_picker);
         mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
@@ -59,9 +60,11 @@ public class EditRDVActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedRDV.setTitle(mTitleEditText.getText().toString());
-                selectedRDV.setDescription(mDescriptionEditText.getText().toString());
-                selectedRDV.setLocation(mLocationEditText.getText().toString());
-                selectedRDV.setDate(Calendar.getInstance().set(mYear, mMonth, mDay).getTime());
+                selectedRDV.setAddress(mLocationEditText.getText().toString());
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(mYear, mMonth, mDay);
+                Date date = calendar.getTime();
+                selectedRDV.setDate(date);
 
                 RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
                 rdvDAO.open();
