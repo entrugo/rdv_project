@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,9 +21,9 @@ public class EditRDVActivity extends AppCompatActivity {
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
     private EditText mLocationEditText;
-    private EditText mDateEditText;
+    private DatePicker mDateEditText;
 
-    private EditText mTimeEditText;
+    private TimePicker mTimeEditText;
     private Button mSaveButton;
 
     private int mYear;
@@ -66,10 +67,8 @@ public class EditRDVActivity extends AppCompatActivity {
         mLocationEditText.setText(selectedRDV.getAddress());
 
         mDateEditText = findViewById(R.id.edit_date_picker);
-        mDateEditText.setText(selectedRDV.getDate());
 
         mTimeEditText = findViewById(R.id.edit_time_picker);
-        mTimeEditText.setText(selectedRDV.getTime());
         mDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,8 +84,8 @@ public class EditRDVActivity extends AppCompatActivity {
                 selectedRDV.setTitle(mTitleEditText.getText().toString());
                 selectedRDV.setAddress(mLocationEditText.getText().toString());
                 selectedRDV.setDescription(mDescriptionEditText.getText().toString());
-                selectedRDV.setDate(mDateEditText.getText().toString());
-                selectedRDV.setTime(mTimeEditText.getText().toString());
+                selectedRDV.setDate(mDateEditText.getDayOfMonth() + "/" + mDateEditText.getMonth() + "/" + mDateEditText.getYear());
+                selectedRDV.setTime(mTimeEditText.getHour() + ":" +mTimeEditText.getMinute());
 
                 rdvDAO.open();
                 rdvDAO.updateRDV(selectedRDV);
@@ -107,7 +106,7 @@ public class EditRDVActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
 
-                mDateEditText.setText(""+day+"/"+month+"/"+year);
+                mDateEditText.updateDate(year,month,day);
             }
         }, mYear, mMonth, mDay);
 

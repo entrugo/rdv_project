@@ -91,7 +91,9 @@ public class RDVAdapter extends BaseAdapter {
                 builder.setPositiveButton("Oui", (dialog, which) -> {
                     // supprimer le RDV de la base de données et de la liste
                     RDVDAO rdvDAO = new RDVDAO(context);
+                    rdvDAO.open();
                     rdvDAO.deleteRDV(rdv);
+                    rdvDAO.close();
                     rdvList.remove(rdv);
                     notifyDataSetChanged();
                 });
