@@ -14,7 +14,11 @@
         android:id="@+id/edit_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter RDV title" />
+        android:hint="Enter RDV title"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:minHeight="48dp"/>
 
     <TextView
         android:layout_width="wrap_content"
