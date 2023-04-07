@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         rdvDAO = new RDVDAO(this);
         rdvListView = findViewById(R.id.rdv_listview);
-
+        rdvDAO.open();
         // Récupération de tous les RDVs enregistrés
         List<RDV> rdvList = rdvDAO.getAllRDVs();
+        rdvDAO.close();
         //rdvAdapter = new RDVAdapter(MainActivity.this, rdvList);
         //rdvListView.setAdapter(rdvAdapter);
 
@@ -59,30 +60,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        rdvDAO.open();
         // Retrieve the latest RDVs from the database and update the RecyclerView
         rdvs = rdvDAO.getAllRDVs();
-        RDVAdapter adapter = new RDVAdapter(rdvs, new RDVAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(RDV rdv) {
-                // Handle item click
-            }
-
-            @Override
-            public void onLocationButtonClick(RDV rdv) {
-
-            }
-
-            @Override
-            public void onPhoneButtonClick(RDV rdv) {
-
-            }
-
-            @Override
-            public void onShareButtonClick(RDV rdv) {
-
-            }
-        });
-        rdvListView.setAdapter((ListAdapter) adapter);
+        rdvDAO.close();
+        RDVAdapter adapter = new RDVAdapter(this, rdvs);
+        rdvListView.setAdapter(adapter);
     }
 
     @Override
