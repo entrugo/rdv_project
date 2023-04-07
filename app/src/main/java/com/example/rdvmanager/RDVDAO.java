@@ -1,6 +1,5 @@
 package com.example.rdvmanager;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -36,10 +35,11 @@ public class RDVDAO {
         values.put(RDVDBHelper.COLUMN_PHONE_NUMBER, rdv.getPhoneNumber());
         values.put(RDVDBHelper.COLUMN_IS_DONE, rdv.isDone() ? 1 : 0);
 
-        return database.insert(RDVDBHelper.TABLE_NAME, null, values);
+        long id = database.insert(RDVDBHelper.TABLE_NAME, null, values);
+        return id;
     }
 
-    @SuppressLint("Range")
+
     public List<RDV> getAllRDVs() {
         List<RDV> rdvList = new ArrayList<>();
 
@@ -49,14 +49,14 @@ public class RDVDAO {
 
         while (cursor.moveToNext()) {
             RDV rdv = new RDV();
-            rdv.setId(cursor.getInt(cursor.getColumnIndex(RDVDBHelper.COLUMN_ID)));
-            rdv.setTitle(cursor.getString(cursor.getColumnIndex(RDVDBHelper.COLUMN_TITLE)));
-            rdv.setDate(cursor.getString(cursor.getColumnIndex(RDVDBHelper.COLUMN_DATE)));
-            rdv.setTime(cursor.getString(cursor.getColumnIndex(RDVDBHelper.COLUMN_TIME)));
-            rdv.setContact(cursor.getString(cursor.getColumnIndex(RDVDBHelper.COLUMN_CONTACT)));
-            rdv.setAddress(cursor.getString(cursor.getColumnIndex(RDVDBHelper.COLUMN_ADDRESS)));
-            rdv.setPhoneNumber(cursor.getString(cursor.getColumnIndex(RDVDBHelper.COLUMN_PHONE_NUMBER)));
-            rdv.setDone(cursor.getInt(cursor.getColumnIndex(RDVDBHelper.COLUMN_IS_DONE)) == 1);
+            rdv.setId(cursor.getInt(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ID)));
+            rdv.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_TITLE)));
+            rdv.setDate(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DATE)));
+            rdv.setTime(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_TIME)));
+            rdv.setContact(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_CONTACT)));
+            rdv.setAddress(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ADDRESS)));
+            rdv.setPhoneNumber(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_PHONE_NUMBER)));
+            rdv.setDone(cursor.getInt(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_IS_DONE)) == 1);
 
             rdvList.add(rdv);
         }

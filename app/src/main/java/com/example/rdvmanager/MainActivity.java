@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RDV rdv = (RDV) parent.getItemAtPosition(position);
-                Log.d("MainActivity", "RDV ID: " + rdv.getId());
+                Toast.makeText(MainActivity.this, "ID du RDV: " + rdv.getId(), Toast.LENGTH_SHORT).show();
                 Intent editIntent = new Intent(MainActivity.this, EditRDVActivity.class);
-                editIntent.putExtra("rdvId", rdv.getId());
+                editIntent.putExtra("rdv_Id", rdv.getId());
                 startActivity(editIntent);
             }
         });

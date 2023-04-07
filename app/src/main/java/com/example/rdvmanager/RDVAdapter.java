@@ -80,7 +80,7 @@ public class RDVAdapter extends BaseAdapter {
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, EditRDVActivity.class);
-                intent.putExtra("RDV_ID", rdv.getId());
+                intent.putExtra("rdv_Id", rdv.getId());
                 context.startActivity(intent);
             });
 

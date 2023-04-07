@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -52,8 +53,12 @@ public class AddRDVActivity extends AppCompatActivity {
 
                 RDVDAO rdvDAO = new RDVDAO(getApplicationContext());
                 rdvDAO.open();
-                rdvDAO.addRDV(rdv);
+                long id= rdvDAO.addRDV(rdv);
+                rdv.setId(id);
+                Toast.makeText(AddRDVActivity.this, "New RDV added with ID " + rdv.getId(), Toast.LENGTH_SHORT).show();
+
                 rdvDAO.close();
+
 
                 Intent intent = new Intent(AddRDVActivity.this, MainActivity.class);
                 startActivity(intent);

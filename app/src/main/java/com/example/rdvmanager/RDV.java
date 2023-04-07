@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import java.util.Date;
 
 public class RDV {
-    private int id;
+    private long id;
     private String title;
     private String date;
     private String description;
@@ -48,11 +48,11 @@ public class RDV {
         this.isDone = isDone;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

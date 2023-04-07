@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import android.util.Log;
 
 public class EditRDVActivity extends AppCompatActivity {
 
@@ -36,14 +35,14 @@ public class EditRDVActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rdv);
 
+
         // Get the RDV ID from the intent extras
-        long rdvId = getIntent().getLongExtra("rdvId", -1);
+        long rdvId = getIntent().getExtras().getLong("rdv_Id", -1);
         if (rdvId == -1) {
             Toast.makeText(this, "Erreur : ID du RDV non fourni", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-        Log.d("EditRDVActivity", "RDV ID: " + rdvId);
 
         // Get the RDV from the database
         RDVDAO rdvDAO = new RDVDAO(this);
