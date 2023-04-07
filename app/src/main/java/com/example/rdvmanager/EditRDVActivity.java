@@ -20,6 +20,8 @@ public class EditRDVActivity extends AppCompatActivity {
     private EditText mDescriptionEditText;
     private EditText mLocationEditText;
     private EditText mDateEditText;
+
+    private EditText mTimeEditText;
     private Button mSaveButton;
 
     private int mYear;
@@ -46,7 +48,10 @@ public class EditRDVActivity extends AppCompatActivity {
         mLocationEditText.setText(selectedRDV.getAddress());
 
         mDateEditText = findViewById(R.id.edit_date_picker);
-        mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
+        mDateEditText.setText(selectedRDV.getDate());
+
+        mTimeEditText = findViewById(R.id.edit_time_picker);
+        mTimeEditText.setText(selectedRDV.getTime());
         mDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,10 +66,9 @@ public class EditRDVActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedRDV.setTitle(mTitleEditText.getText().toString());
                 selectedRDV.setAddress(mLocationEditText.getText().toString());
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(mYear, mMonth, mDay);
-                Date date = calendar.getTime();
-                selectedRDV.setDate(date);
+                selectedRDV.setDescription(mDescriptionEditText.getText().toString());
+                selectedRDV.setDate(mDateEditText.getText().toString());
+                selectedRDV.setTime(mTimeEditText.getText().toString());
 
                 RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
                 rdvDAO.open();
@@ -73,6 +77,7 @@ public class EditRDVActivity extends AppCompatActivity {
 
                 finish();
             }
+
         });
     }
 
@@ -84,14 +89,9 @@ public class EditRDVActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mYear = year;
-                mMonth = monthOfYear;
-                mDay = dayOfMonth;
+            public void onDateSet(DatePicker view, int year, int month, int day) {
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(mYear, mMonth, mDay);
-                mDateEditText.setText(DateFormat.getDateInstance().format(calendar.getTime()));
+                mDateEditText.setText(""+day+"/"+month+"/"+year);
             }
         }, mYear, mMonth, mDay);
 

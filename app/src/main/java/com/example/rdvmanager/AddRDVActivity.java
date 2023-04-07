@@ -27,8 +27,6 @@ public class AddRDVActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_rdv);
 
         mTitleEditText = findViewById(R.id.editTextTitle);
-        mDescriptionEditText = findViewById(R.id.description_edittext);
-        mLocationEditText = findViewById(R.id.location_edittext);
         mContactEditText = findViewById(R.id.editTextContact);
         mDatePicker = findViewById(R.id.datePicker);
         mTimePicker = findViewById(R.id.timePicker);
@@ -47,10 +45,8 @@ public class AddRDVActivity extends AppCompatActivity {
                 int hour = mTimePicker.getHour();
                 int minute = mTimePicker.getMinute();
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day, hour, minute);
 
-                RDV rdv = new RDV(title, new Date(bug), calendar.getTime(), contact, location, description, false);
+                RDV rdv = new RDV(title, ""+day+"/"+month+"/"+year, ""+hour+":"+minute, contact, location, description, false);
 
                 RDVDAO rdvDAO = new RDVDAO(getApplicationContext());
                 rdvDAO.open();
