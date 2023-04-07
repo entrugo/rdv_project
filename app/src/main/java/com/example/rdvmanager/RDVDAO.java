@@ -66,6 +66,31 @@ public class RDVDAO {
         return rdvList;
     }
 
+
+    public RDV getRDVById(long id) {
+        String selection = RDVDBHelper.COLUMN_ID + "=?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        Cursor cursor = database.query(RDVDBHelper.TABLE_NAME, null, selection, selectionArgs, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            RDV rdv = new RDV();
+            rdv.setId(cursor.getInt(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ID)));
+            rdv.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_TITLE)));
+            rdv.setDate(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DATE)));
+            rdv.setTime(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_TIME)));
+            rdv.setContact(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_CONTACT)));
+            rdv.setAddress(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ADDRESS)));
+            rdv.setPhoneNumber(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_PHONE_NUMBER)));
+            rdv.setDone(cursor.getInt(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_IS_DONE)) == 1);
+
+            cursor.close();
+            return rdv;
+        } else {
+            return null;
+        }
+    }
+
     public int updateRDV(RDV rdv) {
         ContentValues values = new ContentValues();
         values.put(RDVDBHelper.COLUMN_TITLE, rdv.getTitle());

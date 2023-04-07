@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import android.util.Log;
 
 public class EditRDVActivity extends AppCompatActivity {
 
@@ -34,8 +36,25 @@ public class EditRDVActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rdv);
 
-        // Get the selected RDV from the intent extras
-        RDV selectedRDV = (RDV) getIntent().getSerializableExtra("selectedRDV");
+        // Get the RDV ID from the intent extras
+        long rdvId = getIntent().getLongExtra("rdvId", -1);
+        if (rdvId == -1) {
+            Toast.makeText(this, "Erreur : ID du RDV non fourni", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        Log.d("EditRDVActivity", "RDV ID: " + rdvId);
+
+        // Get the RDV from the database
+        RDVDAO rdvDAO = new RDVDAO(this);
+        rdvDAO.open();
+        RDV selectedRDV = rdvDAO.getRDVById(rdvId);
+        if (selectedRDV == null) {
+            Toast.makeText(this, "Erreur : RDV introuvable", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        rdvDAO.close();
 
         // Initialize the EditText and DatePicker widgets with the current values of the selected RDV
         mTitleEditText = findViewById(R.id.edit_title);
@@ -70,14 +89,12 @@ public class EditRDVActivity extends AppCompatActivity {
                 selectedRDV.setDate(mDateEditText.getText().toString());
                 selectedRDV.setTime(mTimeEditText.getText().toString());
 
-                RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
                 rdvDAO.open();
                 rdvDAO.updateRDV(selectedRDV);
                 rdvDAO.close();
 
                 finish();
             }
-
         });
     }
 

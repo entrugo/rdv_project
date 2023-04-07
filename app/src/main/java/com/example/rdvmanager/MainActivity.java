@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,9 +42,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RDV rdv = (RDV) parent.getItemAtPosition(position);
-                Intent intent = new Intent(MainActivity.this, AddRDVActivity.class);
-                intent.putExtra("rdvId", rdv.getId());
-                startActivity(intent);
+                Log.d("MainActivity", "RDV ID: " + rdv.getId());
+                Intent editIntent = new Intent(MainActivity.this, EditRDVActivity.class);
+                editIntent.putExtra("rdvId", rdv.getId());
+                startActivity(editIntent);
             }
         });
     }
