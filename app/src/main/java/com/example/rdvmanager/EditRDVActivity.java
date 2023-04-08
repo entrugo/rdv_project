@@ -31,10 +31,10 @@ public class EditRDVActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rdv);
 
-        // Récupération du RDV sélectionné
+        // Get the selected RDV from the intent extras
         RDV selectedRDV = (RDV) getIntent().getSerializableExtra("selectedRDV");
 
-        // Affichage des paramètres du RDV sélectionné
+        // Initialize the EditText and DatePicker widgets with the current values of the selected RDV
         mTitleEditText = findViewById(R.id.edit_title);
         mTitleEditText.setText(selectedRDV.getTitle());
 

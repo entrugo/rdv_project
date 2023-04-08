@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +30,22 @@ public class MainActivity extends AppCompatActivity {
 
         rdvDAO = new RDVDAO(this);
         rdvListView = findViewById(R.id.rdv_listview);
-
+        rdvDAO.open();
         // Récupération de tous les RDVs enregistrés
         List<RDV> rdvList = rdvDAO.getAllRDVs();
-        rdvAdapter = new RDVAdapter(this, rdvList);
-        rdvListView.setAdapter(rdvAdapter);
+        rdvDAO.close();
+        //rdvAdapter = new RDVAdapter(MainActivity.this, rdvList);
+        //rdvListView.setAdapter(rdvAdapter);
 
         // Lorsqu'on clique sur un RDV, on peut le modifier
         rdvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RDV rdv = (RDV) parent.getItemAtPosition(position);
-                Intent intent = new Intent(MainActivity.this, AddRDVActivity.class);
-                intent.putExtra("rdvId", rdv.getId());
-                startActivity(intent);
+                Toast.makeText(MainActivity.this, "ID du RDV: " + rdv.getId(), Toast.LENGTH_SHORT).show();
+                Intent editIntent = new Intent(MainActivity.this, EditRDVActivity.class);
+                editIntent.putExtra("rdv_Id", rdv.getId());
+                startActivity(editIntent);
             }
         });
     }
@@ -56,8 +62,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        rdvDAO.open();
         // Retrieve the latest RDVs from the database and update the RecyclerView
         rdvs = rdvDAO.getAllRDVs();
+        rdvDAO.close();
         RDVAdapter adapter = new RDVAdapter(this, rdvs);
         rdvListView.setAdapter(adapter);
     }

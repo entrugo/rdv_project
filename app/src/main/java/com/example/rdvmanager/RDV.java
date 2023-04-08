@@ -7,9 +7,10 @@ import androidx.annotation.NonNull;
 import java.util.Date;
 
 public class RDV {
-    private int id;
+    private long id;
     private String title;
     private String date;
+    private String description;
     private String time;
     private String contact;
     private String address;
@@ -47,11 +48,11 @@ public class RDV {
         this.isDone = isDone;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -122,5 +123,13 @@ public class RDV {
     public Uri getAddressUri() {
         String uri = "geo:0,0?q=" + getAddress();
         return Uri.parse(uri);
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String desc){
+        this.description=desc;
     }
 }

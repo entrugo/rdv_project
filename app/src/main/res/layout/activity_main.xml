@@ -12,7 +12,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"/>
+        android:paddingVertical="8dp"
+        android:onClick="onAddRDVClick"/>
 
     <ListView
         android:id="@+id/rdv_listview"
@@ -29,12 +30,5 @@
         android:layout_marginTop="16dp"
         android:visibility="gone"/>
 
-    <fragment
-        android:id="@+id/map_fragment"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"/>
 
 </LinearLayout>

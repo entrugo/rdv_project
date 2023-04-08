@@ -1,112 +1,108 @@
 package com.example.rdvmanager;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class RDVAdapter extends RecyclerView.Adapter<RDVAdapter.ViewHolder> {
-    private List<RDV> rdvList;
-    private OnItemClickListener listener;
+public class RDVAdapter extends BaseAdapter {
+    private final List<RDV> rdvList;
+    private final Context context;
+    private final LayoutInflater inflater;
 
-    public RDVAdapter(List<RDV> rdvList, OnItemClickListener listener) {
+    public RDVAdapter(Context context, List<RDV> rdvList) {
+        this.context = context;
         this.rdvList = rdvList;
-        this.listener = listener;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_rdv, parent, false);
-        return new ViewHolder(view);
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RDV rdv = rdvList.get(position);
-        holder.dateTextView.setText(rdv.getDate());
-        holder.timeTextView.setText(rdv.getTime());
-        holder.descriptionTextView.setText(rdv.getDescription());
-
-        // Set onClickListener for editing an RDV
-        holder.itemView.setOnClickListener(view -> {
-            Intent intent = new Intent(context, EditRDVActivity.class);
-            intent.putExtra("RDV_ID", rdv.getId());
-            context.startActivity(intent);
-        });
-
-        // Set onLongClickListener for deleting an RDV
-        holder.itemView.setOnLongClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Do you want to delete this RDV?")
-                    .setPositiveButton("Yes", (dialogInterface, i) -> {
-                        // Delete RDV from database
-                        RDVDAO.deleteRDV(rdv.getId());
-
-                        // Remove RDV from RecyclerView
-                        rdvs.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, rdvs.size());
-                    })
-                    .setNegativeButton("No", null);
-            builder.create().show();
-            return true;
-        });
+    public int getCount() {
+        return rdvList.size();
     }
 
     @Override
-    public int getItemCount() {
-        return rdvs.size();
+    public Object getItem(int position) {
+        return rdvList.get(position);
     }
 
-    public void updateRDVs(List<RDV> rdvList) {
-        this.rdvList = rdvList;
-        notifyDataSetChanged();
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView titleTextView;
-        private TextView dateTextView;
-        private TextView timeTextView;
-        private TextView contactTextView;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            titleTextView = itemView.findViewById(R.id.titleTextView);
-            dateTextView = itemView.findViewById(R.id.dateTextView);
-            timeTextView = itemView.findViewById(R.id.timeTextView);
-            contactTextView = itemView.findViewById(R.id.contactTextView);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.item_rdv, parent, false);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        public void bind(final RDV rdv, final OnItemClickListener listener) {
+        RDV rdv = rdvList.get(position);
+        viewHolder.bind(rdv);
+
+        return convertView;
+    }
+
+    /**public void updateRDVs(List<RDV> rdvList) {
+        this.rdvList = rdvList;
+        notifyDataSetChanged();
+    }**/
+
+    private class ViewHolder {
+        private final TextView titleTextView;
+        private final TextView dateTextView;
+        private final TextView contactTextView;
+        private final View itemView;
+
+        public ViewHolder(View itemView) {
+            this.itemView = itemView;
+            titleTextView = itemView.findViewById(R.id.textview_rdv_title);
+            dateTextView = itemView.findViewById(R.id.textview_rdv_datetime);
+            contactTextView = itemView.findViewById(R.id.textview_rdv_contact);
+        }
+
+        public void bind(final RDV rdv) {
             titleTextView.setText(rdv.getTitle());
             dateTextView.setText(rdv.getDate());
-            timeTextView.setText(rdv.getTime());
             contactTextView.setText(rdv.getContact());
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(rdv);
-                }
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, EditRDVActivity.class);
+                intent.putExtra("rdv_Id", rdv.getId());
+                context.startActivity(intent);
+            });
+
+            itemView.setOnLongClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Confirmation de suppression");
+                builder.setMessage("Etes-vous sûr de vouloir supprimer ce RDV ?");
+                builder.setPositiveButton("Oui", (dialog, which) -> {
+                    // supprimer le RDV de la base de données et de la liste
+                    RDVDAO rdvDAO = new RDVDAO(context);
+                    rdvDAO.open();
+                    rdvDAO.deleteRDV(rdv);
+                    rdvDAO.close();
+                    rdvList.remove(rdv);
+                    notifyDataSetChanged();
+                });
+                builder.setNegativeButton("Non", null);
+                builder.show();
+                return true;
             });
         }
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(RDV rdv);
-        void onLocationButtonClick(RDV rdv);
-        void onPhoneButtonClick(RDV rdv);
-        void onShareButtonClick(RDV rdv);
-    }
-}
 
+}
