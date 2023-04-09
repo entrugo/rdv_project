@@ -36,16 +36,31 @@ public class EditRDVActivity extends AppCompatActivity {
 
         // Initialize the EditText and DatePicker widgets with the current values of the selected RDV
         mTitleEditText = findViewById(R.id.edit_title);
-        mTitleEditText.setText(selectedRDV.getTitle());
+        // mTitleEditText.setText(selectedRDV.getTitle());
+        if (selectedRDV != null && mTitleEditText != null) {
+            mTitleEditText.setText(selectedRDV.getTitle());
+        }
+
 
         mDescriptionEditText = findViewById(R.id.edit_description);
-        mDescriptionEditText.setText(selectedRDV.getDescription());
+        // mDescriptionEditText.setText(selectedRDV.getDescription());
+        if (selectedRDV != null && mDescriptionEditText != null) {
+            mDescriptionEditText.setText(selectedRDV.getDescription());
+        }
 
         mLocationEditText = findViewById(R.id.edit_location);
-        mLocationEditText.setText(selectedRDV.getLocation());
+        // mLocationEditText.setText(selectedRDV.getAddress());
+        if (selectedRDV != null && mLocationEditText != null) {
+            mLocationEditText.setText(selectedRDV.getAddress());
+        }
 
         mDateEditText = findViewById(R.id.edit_date_picker);
-        mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
+        // mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
+        if (selectedRDV != null && mDateEditText != null) {
+            mDateEditText.setKeyListener(null); // définir non éditable
+            mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
+        }
+
         mDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,8 +75,11 @@ public class EditRDVActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedRDV.setTitle(mTitleEditText.getText().toString());
                 selectedRDV.setDescription(mDescriptionEditText.getText().toString());
-                selectedRDV.setLocation(mLocationEditText.getText().toString());
-                selectedRDV.setDate(Calendar.getInstance().set(mYear, mMonth, mDay).getTime());
+                selectedRDV.setAddress(mLocationEditText.getText().toString());
+                // selectedRDV.setDate(Calendar.getInstance().set(mYear, mMonth, mDay).getTime());
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(mYear, mMonth, mDay);
+                selectedRDV.setDate(String.valueOf(calendar.getTime()));
 
                 RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
                 rdvDAO.open();
