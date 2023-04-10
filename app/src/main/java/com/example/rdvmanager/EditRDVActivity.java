@@ -34,7 +34,7 @@ public class EditRDVActivity extends AppCompatActivity {
         // Get the selected RDV from the intent extras
         RDV selectedRDV = (RDV) getIntent().getSerializableExtra("selectedRDV");
 
-        // Initialize the EditText and DatePicker widgets with the current values of the selected RDV
+        // On met à jour le xml avec les informations du RDV sélectionné
         mTitleEditText = findViewById(R.id.edit_title);
         // mTitleEditText.setText(selectedRDV.getTitle());
         if (selectedRDV != null && mTitleEditText != null) {
@@ -72,7 +72,6 @@ public class EditRDVActivity extends AppCompatActivity {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selectedRDV != null) {
                     selectedRDV.setTitle(mTitleEditText.getText().toString());
                     selectedRDV.setDescription(mDescriptionEditText.getText().toString());
                     selectedRDV.setAddress(mLocationEditText.getText().toString());
@@ -87,7 +86,6 @@ public class EditRDVActivity extends AppCompatActivity {
                     rdvDAO.close();
 
                     finish();
-                }
             }
         });
     }
