@@ -25,7 +25,7 @@ public class EditRDVActivity extends AppCompatActivity {
     private int mMonth;
     private int mDay;
 
-    @SuppressLint("WrongViewCast")
+    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +54,9 @@ public class EditRDVActivity extends AppCompatActivity {
             mLocationEditText.setText(selectedRDV.getAddress());
         }
 
-        mDateEditText = findViewById(R.id.edit_date_picker);
+        mDateEditText = findViewById(R.id.edit_date_picker2);
         // mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
         if (selectedRDV != null && mDateEditText != null) {
-            mDateEditText.setKeyListener(null); // définir non éditable
             mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
         }
 
@@ -73,20 +72,22 @@ public class EditRDVActivity extends AppCompatActivity {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedRDV.setTitle(mTitleEditText.getText().toString());
-                selectedRDV.setDescription(mDescriptionEditText.getText().toString());
-                selectedRDV.setAddress(mLocationEditText.getText().toString());
-                // selectedRDV.setDate(Calendar.getInstance().set(mYear, mMonth, mDay).getTime());
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(mYear, mMonth, mDay);
-                selectedRDV.setDate(String.valueOf(calendar.getTime()));
+                if (selectedRDV != null) {
+                    selectedRDV.setTitle(mTitleEditText.getText().toString());
+                    selectedRDV.setDescription(mDescriptionEditText.getText().toString());
+                    selectedRDV.setAddress(mLocationEditText.getText().toString());
+                    // selectedRDV.setDate(Calendar.getInstance().set(mYear, mMonth, mDay).getTime());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(mYear, mMonth, mDay);
+                    selectedRDV.setDate(String.valueOf(calendar.getTime()));
 
-                RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
-                rdvDAO.open();
-                rdvDAO.updateRDV(selectedRDV);
-                rdvDAO.close();
+                    RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
+                    rdvDAO.open();
+                    rdvDAO.updateRDV(selectedRDV);
+                    rdvDAO.close();
 
-                finish();
+                    finish();
+                }
             }
         });
     }
