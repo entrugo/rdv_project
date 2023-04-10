@@ -48,6 +48,10 @@ public class AddRDVActivity extends AppCompatActivity {
                 int hour = mTimePicker.getHour();
                 int minute = mTimePicker.getMinute();
 
+                if(title.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Specify a Title to save !", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 RDV rdv = new RDV(title, ""+day+"/"+month+"/"+year, ""+hour+":"+minute, contact, address, description, false);
 
