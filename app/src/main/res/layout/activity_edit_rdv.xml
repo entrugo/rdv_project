@@ -85,6 +85,7 @@
         android:id="@+id/button_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="launchPhoneCall"
         android:text="Call" />
 
     <TextView

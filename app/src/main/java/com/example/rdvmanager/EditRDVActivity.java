@@ -103,6 +103,13 @@ public class EditRDVActivity extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
+    public void launchPhoneCall(View view) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + mPhoneEditText.getText()));
+        startActivity(intent);
+    }
+
+
     private void showDatePickerDialog() {
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
