@@ -2,6 +2,8 @@ package com.example.rdvmanager;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +21,10 @@ public class EditRDVActivity extends AppCompatActivity {
     private EditText mDescriptionEditText;
     private EditText mLocationEditText;
     private EditText mDateEditText;
+    private EditText mPhoneEditText;
     private Button mSaveButton;
+    private Button mLocationButton;
+    private Button mPhoneButton;
 
     private int mYear;
     private int mMonth;
@@ -36,28 +41,28 @@ public class EditRDVActivity extends AppCompatActivity {
 
         // On met à jour le xml avec les informations du RDV sélectionné
         mTitleEditText = findViewById(R.id.edit_title);
-        // mTitleEditText.setText(selectedRDV.getTitle());
         if (selectedRDV != null && mTitleEditText != null) {
             mTitleEditText.setText(selectedRDV.getTitle());
         }
-
-
+        // Description
         mDescriptionEditText = findViewById(R.id.edit_description);
-        // mDescriptionEditText.setText(selectedRDV.getDescription());
         if (selectedRDV != null && mDescriptionEditText != null) {
             mDescriptionEditText.setText(selectedRDV.getDescription());
         }
-
+        // Adresse
         mLocationEditText = findViewById(R.id.edit_location);
-        // mLocationEditText.setText(selectedRDV.getAddress());
         if (selectedRDV != null && mLocationEditText != null) {
             mLocationEditText.setText(selectedRDV.getAddress());
         }
-
+        // Date
         mDateEditText = findViewById(R.id.edit_date_picker2);
-        // mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
         if (selectedRDV != null && mDateEditText != null) {
             mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
+        }
+        // Num. téléphone
+        mPhoneEditText = findViewById(R.id.edit_phone);
+        if (selectedRDV != null && mPhoneEditText != null) {
+            mPhoneEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getPhoneNumber()));
         }
 
         mDateEditText.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +93,14 @@ public class EditRDVActivity extends AppCompatActivity {
                     finish();
             }
         });
+    }
+
+    public void launchMaps(View view) {
+        String map = "http://maps.google.co.in/maps?q=" + mLocationEditText.getText().toString() ;
+        Uri gmmIntentUri = Uri.parse(map);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     private void showDatePickerDialog() {
