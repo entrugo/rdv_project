@@ -75,8 +75,8 @@ public class AddRDVActivity extends AppCompatActivity {
 
 
                 if(mChoice1.isChecked()) delay = 5000; // 86400000 // 1 day
-                if(mChoice1.isChecked()) delay = 172800000; // 2 days
-                if(mChoice1.isChecked()) delay = 604800000; // 1 week
+                if(mChoice2.isChecked()) delay = 172800000; // 2 days
+                if(mChoice3.isChecked()) delay = 604800000; // 1 week
 
                 if (title.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Specify a Title to save !", Toast.LENGTH_SHORT).show();
