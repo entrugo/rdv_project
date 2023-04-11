@@ -54,6 +54,10 @@
             android:padding="8dp"
             android:minHeight="48dp"/>
 
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <DatePicker
             android:id="@+id/datePicker"
             android:layout_width="match_parent"
