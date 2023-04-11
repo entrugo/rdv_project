@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/edit_date_picker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -28,11 +27,10 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/edit_date_picker2"
+    <DatePicker
+        android:id="@+id/edit_date_picker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter date" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,11 +39,10 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <EditText
+    <TimePicker
         android:id="@+id/edit_time_picker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter time" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -111,7 +108,6 @@
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick=""
         android:text="Delete" />
 
 </LinearLayout>

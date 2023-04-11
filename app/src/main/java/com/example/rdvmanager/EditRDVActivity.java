@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +21,8 @@ public class EditRDVActivity extends AppCompatActivity {
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
     private EditText mLocationEditText;
-    private EditText mDateEditText;
+    private DatePicker mDateEditText;
+    private TimePicker mTimeEditText;
     private EditText mPhoneEditText;
     private Button mSaveButton;
     private Button mLocationButton;
@@ -55,10 +57,9 @@ public class EditRDVActivity extends AppCompatActivity {
             mLocationEditText.setText(selectedRDV.getAddress());
         }
         // Date
-        mDateEditText = findViewById(R.id.edit_date_picker2);
-        if (selectedRDV != null && mDateEditText != null) {
-            mDateEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getDate()));
-        }
+        mDateEditText = findViewById(R.id.edit_date_picker);
+        // Time
+        mTimeEditText = findViewById(R.id.edit_time_picker);
         // Num. téléphone
         mPhoneEditText = findViewById(R.id.edit_phone);
         if (selectedRDV != null && mPhoneEditText != null) {
@@ -80,10 +81,8 @@ public class EditRDVActivity extends AppCompatActivity {
                     selectedRDV.setTitle(mTitleEditText.getText().toString());
                     selectedRDV.setDescription(mDescriptionEditText.getText().toString());
                     selectedRDV.setAddress(mLocationEditText.getText().toString());
-                    // selectedRDV.setDate(Calendar.getInstance().set(mYear, mMonth, mDay).getTime());
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(mYear, mMonth, mDay);
-                    selectedRDV.setDate(String.valueOf(calendar.getTime()));
+                    selectedRDV.setDate(mDateEditText.getDayOfMonth() + "/" + mDateEditText.getMonth() + "/" + mDateEditText.getYear());
+                    selectedRDV.setTime(mTimeEditText.getHour() + ":" +mTimeEditText.getMinute());
 
                     RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
                     rdvDAO.open();
@@ -118,14 +117,8 @@ public class EditRDVActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mYear = year;
-                mMonth = monthOfYear;
-                mDay = dayOfMonth;
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(mYear, mMonth, mDay);
-                mDateEditText.setText(DateFormat.getDateInstance().format(calendar.getTime()));
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                mDateEditText.updateDate(year,month,day);
             }
         }, mYear, mMonth, mDay);
 
