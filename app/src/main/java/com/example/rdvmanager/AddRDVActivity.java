@@ -72,6 +72,8 @@ public class AddRDVActivity extends AppCompatActivity {
                 int hour = mTimePicker.getHour();
                 int minute = mTimePicker.getMinute();
 
+
+
                 if(mChoice1.isChecked()) delay = 5000; // 86400000 // 1 day
                 if(mChoice1.isChecked()) delay = 172800000; // 2 days
                 if(mChoice1.isChecked()) delay = 604800000; // 1 week
@@ -129,7 +131,21 @@ public class AddRDVActivity extends AppCompatActivity {
                 .setContentIntent(pendingIntent);
 
         // Delay before launching the notification
-        notifBuilder.setWhen(System.currentTimeMillis() + delay);
+        int year = mDatePicker.getYear();
+        int month = mDatePicker.getMonth();
+        int day = mDatePicker.getDayOfMonth();
+        int hour = mTimePicker.getHour();
+        int minute = mTimePicker.getMinute();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        long timeInMillis = calendar.getTimeInMillis();
+
+        notifBuilder.setWhen(timeInMillis - delay);
 
         // notificationId: unique identifier to define
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
