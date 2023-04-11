@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,14 +33,29 @@ public class EditRDVActivity extends AppCompatActivity {
     private int mMonth;
     private int mDay;
 
-    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
+    @SuppressLint({"WrongViewCast"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rdv);
 
-        // Get the selected RDV from the intent extras
-        RDV selectedRDV = (RDV) getIntent().getSerializableExtra("selectedRDV");
+        // Get the RDV ID from the intent extras
+        long rdvId = getIntent().getExtras().getLong("rdv_Id", -1);
+        if (rdvId == -1) {
+            Toast.makeText(this, "Erreur : ID du RDV non fourni", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        // Get the RDV from the database
+        RDVDAO rdvDAO = new RDVDAO(this);
+        rdvDAO.open();
+        RDV selectedRDV = rdvDAO.getRDVById(rdvId);
+        if (selectedRDV == null) {
+            Toast.makeText(this, "Erreur : RDV introuvable", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        rdvDAO.close();
 
         // On met à jour le xml avec les informations du RDV sélectionné
         mTitleEditText = findViewById(R.id.edit_title);
@@ -63,7 +79,7 @@ public class EditRDVActivity extends AppCompatActivity {
         // Num. téléphone
         mPhoneEditText = findViewById(R.id.edit_phone);
         if (selectedRDV != null && mPhoneEditText != null) {
-            mPhoneEditText.setText(DateFormat.getDateInstance().format(selectedRDV.getPhoneNumber()));
+            mPhoneEditText.setText(String.valueOf(selectedRDV.getPhoneNumber()));
         }
 
         mDateEditText.setOnClickListener(new View.OnClickListener() {
