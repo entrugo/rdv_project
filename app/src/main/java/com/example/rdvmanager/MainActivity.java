@@ -1,6 +1,7 @@
 package com.example.rdvmanager;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,7 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.core.app.ActivityCompat;
 
 
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getIntent().getBooleanExtra("requestPostNotificationsPermission", false)) {
+            requestPostNotificationsPermission();
+        }
 
         rdvDAO = new RDVDAO(this);
         rdvListView = findViewById(R.id.rdv_listview);
@@ -68,6 +73,28 @@ public class MainActivity extends AppCompatActivity {
         rdvDAO.close();
         RDVAdapter adapter = new RDVAdapter(this, rdvs);
         rdvListView.setAdapter(adapter);
+    }
+
+    public static final int REQUEST_CODE_POST_NOTIFICATIONS = 1;
+
+    public void requestPostNotificationsPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, REQUEST_CODE_POST_NOTIFICATIONS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_POST_NOTIFICATIONS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted, you can show the notification now
+                } else {
+                    // Permission denied, show an explanation or disable the feature
+                    Toast.makeText(this, "Permission to show notifications was denied.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override

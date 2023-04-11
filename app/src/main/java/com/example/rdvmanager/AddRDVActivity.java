@@ -1,8 +1,10 @@
 package com.example.rdvmanager;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -14,11 +16,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.Manifest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -118,19 +123,17 @@ public class AddRDVActivity extends AppCompatActivity {
     }
 
     public void CreateNotification(View view, int delay) {
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SCHEDULE_EXACT_ALARM}, PERMISSION_REQUEST_CODE);
+            return;
+        }
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra("title", mTitleEditText.getText().toString());
+        intent.putExtra("description", mDescriptionEditText.getText().toString());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(mTitleEditText.getText().toString())
-                .setContentText(mDescriptionEditText.getText().toString())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent);
-
-        // Delay before launching the notification
         int year = mDatePicker.getYear();
         int month = mDatePicker.getMonth();
         int day = mDatePicker.getDayOfMonth();
@@ -145,20 +148,29 @@ public class AddRDVActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, minute);
         long timeInMillis = calendar.getTimeInMillis();
 
-        notifBuilder.setWhen(timeInMillis - delay);
-
-        // notificationId: unique identifier to define
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis - delay, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMillis - delay, pendingIntent);
         }
-        notificationManager.notify(NOTIFICATION_ID, notifBuilder.build());
     }
+
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission accordée, créez la notification
+                CreateNotification(null, delay);
+            } else {
+                // Permission refusée, affichez un message d'erreur
+                Toast.makeText(this, "Permission to set exact alarms denied. Notification won't be set.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
 
