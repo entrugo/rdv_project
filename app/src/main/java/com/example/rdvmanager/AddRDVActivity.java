@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -30,6 +31,11 @@ public class AddRDVActivity extends AppCompatActivity {
     private EditText mContactEditText;
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
+    private RadioButton mChoice1;
+    private RadioButton mChoice2;
+    private RadioButton mChoice3;
+
+    static int delay;
 
     // Notifications
     static String CHANNEL_ID = "channel_01";
@@ -48,6 +54,9 @@ public class AddRDVActivity extends AppCompatActivity {
         mContactEditText = findViewById(R.id.editTextContact);
         mDatePicker = findViewById(R.id.datePicker);
         mTimePicker = findViewById(R.id.timePicker);
+        mChoice1 = findViewById(R.id.choice1);
+        mChoice2 = findViewById(R.id.choice2);
+        mChoice3 = findViewById(R.id.choice3);
 
         Button saveButton = findViewById(R.id.buttonSave);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -63,10 +72,17 @@ public class AddRDVActivity extends AppCompatActivity {
                 int hour = mTimePicker.getHour();
                 int minute = mTimePicker.getMinute();
 
+                if(mChoice1.isChecked()) delay = 5000; // 86400000 // 1 day
+                if(mChoice1.isChecked()) delay = 172800000; // 2 days
+                if(mChoice1.isChecked()) delay = 604800000; // 1 week
+
                 if (title.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Specify a Title to save !", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                // Ajout notification
+                CreateNotification(view, delay);
 
                 RDV rdv = new RDV(title, "" + day + "/" + month + "/" + year, "" + hour + ":" + minute, contact, address, description, false);
 
@@ -99,7 +115,7 @@ public class AddRDVActivity extends AppCompatActivity {
         }
     }
 
-    public void showNotification(View view, int delayInMs) {
+    public void CreateNotification(View view, int delay) {
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE, intent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -107,13 +123,13 @@ public class AddRDVActivity extends AppCompatActivity {
 
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Titre")
-                .setContentText("Contenu")
+                .setContentTitle(mTitleEditText.getText().toString())
+                .setContentText(mDescriptionEditText.getText().toString())
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent);
 
         // Delay before launching the notification
-        notifBuilder.setWhen(System.currentTimeMillis() + delayInMs);
+        notifBuilder.setWhen(System.currentTimeMillis() + delay);
 
         // notificationId: unique identifier to define
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
