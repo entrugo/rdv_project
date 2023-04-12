@@ -28,21 +28,24 @@ public class RDV {
         this.phoneNumber = null;
         this.isDone = false;
     }
-    public RDV(String title, String date, String time, String contact, String address, String phoneNumber, boolean isDone) {
+
+    public RDV(String title, String date, String time, String contact, String address, String phoneNumber, String description, boolean isDone) {
         this.title = title;
         this.date = date;
         this.time = time;
         this.contact = contact;
+        this.description = description;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.isDone = isDone;
     }
 
-    public RDV(int id, String title, String date, String time, String contact, String address, String phoneNumber, boolean isDone) {
+    public RDV(int id, String title, String date, String time, String contact, String address, String phoneNumber, String description, boolean isDone) {
         this.id = id;
         this.title = title;
         this.date = date;
         this.time = time;
+        this.description = description;
         this.contact = contact;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -117,7 +120,8 @@ public class RDV {
                 "Time: " + getTime() + "\n" +
                 "Contact: " + getContact() + "\n" +
                 "Address: " + getAddress() + "\n" +
-                "Phone: " + getPhoneNumber();
+                "Phone: " + getPhoneNumber() + "\n" +
+                "Description: " + getDescription();
     }
 
     public Uri getAddressUri() {

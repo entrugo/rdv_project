@@ -33,6 +33,7 @@ public class RDVDAO {
         values.put(RDVDBHelper.COLUMN_CONTACT, rdv.getContact());
         values.put(RDVDBHelper.COLUMN_ADDRESS, rdv.getAddress());
         values.put(RDVDBHelper.COLUMN_PHONE_NUMBER, rdv.getPhoneNumber());
+        values.put(RDVDBHelper.COLUMN_DESCRIPTION, rdv.getDescription());
         values.put(RDVDBHelper.COLUMN_IS_DONE, rdv.isDone() ? 1 : 0);
 
         long id = database.insert(RDVDBHelper.TABLE_NAME, null, values);
@@ -56,6 +57,7 @@ public class RDVDAO {
             rdv.setContact(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_CONTACT)));
             rdv.setAddress(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ADDRESS)));
             rdv.setPhoneNumber(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_PHONE_NUMBER)));
+            rdv.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DESCRIPTION)));
             rdv.setDone(cursor.getInt(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_IS_DONE)) == 1);
 
             rdvList.add(rdv);
@@ -82,6 +84,7 @@ public class RDVDAO {
             rdv.setContact(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_CONTACT)));
             rdv.setAddress(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ADDRESS)));
             rdv.setPhoneNumber(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_PHONE_NUMBER)));
+            rdv.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DESCRIPTION)));
             rdv.setDone(cursor.getInt(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_IS_DONE)) == 1);
 
             cursor.close();
@@ -99,6 +102,7 @@ public class RDVDAO {
         values.put(RDVDBHelper.COLUMN_CONTACT, rdv.getContact());
         values.put(RDVDBHelper.COLUMN_ADDRESS, rdv.getAddress());
         values.put(RDVDBHelper.COLUMN_PHONE_NUMBER, rdv.getPhoneNumber());
+        values.put(RDVDBHelper.COLUMN_DESCRIPTION, rdv.getDescription());
         values.put(RDVDBHelper.COLUMN_IS_DONE, rdv.isDone() ? 1 : 0);
 
         return database.update(RDVDBHelper.TABLE_NAME, values,
@@ -142,9 +146,10 @@ public class RDVDAO {
             String dateStr = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DATE));
             String time = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_TIME));
             String location = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ADDRESS));
-            String description = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_PHONE_NUMBER));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DESCRIPTION));
+            String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_PHONE_NUMBER));
 
-            RDV rdv = new RDV(id, title, dateStr, time, location, description, true);
+            RDV rdv = new RDV(id, title, dateStr, time, location,phoneNumber, description, true);
             rdvs.add(rdv);
         }
 

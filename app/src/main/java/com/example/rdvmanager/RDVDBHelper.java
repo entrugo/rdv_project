@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class RDVDBHelper extends SQLiteOpenHelper {
+    public static final String COLUMN_DESCRIPTION = "description";
     private static final String DATABASE_NAME = "rdv.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -25,7 +26,7 @@ public class RDVDBHelper extends SQLiteOpenHelper {
             + " text not null, " + COLUMN_DATE + " text not null, "
             + COLUMN_TIME + " text not null, " + COLUMN_CONTACT
             + " text not null, " + COLUMN_ADDRESS + " text, "
-            + COLUMN_PHONE_NUMBER + " text, " + COLUMN_IS_DONE + " integer);";
+            + COLUMN_PHONE_NUMBER + COLUMN_DESCRIPTION + " text, " + COLUMN_IS_DONE + " integer);";
 
 
     public RDVDBHelper(Context context) {

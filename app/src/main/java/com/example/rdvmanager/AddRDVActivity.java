@@ -93,7 +93,7 @@ public class AddRDVActivity extends AppCompatActivity {
                 if(!mChoice1.isChecked() && !mChoice2.isChecked() && !mChoice3.isChecked()) ;
                 else CreateNotification(view, delay);
 
-                RDV rdv = new RDV(title, "" + day + "/" + month + "/" + year, "" + hour + ":" + minute, contact, address, phoneNumber, false);
+                RDV rdv = new RDV(title, "" + day + "/" + month + "/" + year, "" + hour + ":" + minute, contact, address, phoneNumber, description, false);
 
                 RDVDAO rdvDAO = new RDVDAO(getApplicationContext());
                 rdvDAO.open();
