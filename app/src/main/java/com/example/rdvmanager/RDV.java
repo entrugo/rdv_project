@@ -119,7 +119,8 @@ public class RDV {
                 "Time: " + getTime() + "\n" +
                 "Contact: " + getContact() + "\n" +
                 "Address: " + getAddress() + "\n" +
-                "Phone: " + getPhoneNumber();
+                "Phone: " + getPhoneNumber() +
+                "Description: " + getDescription();
     }
 
     public Uri getAddressUri() {
