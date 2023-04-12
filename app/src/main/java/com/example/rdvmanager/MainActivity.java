@@ -3,17 +3,15 @@ package com.example.rdvmanager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +21,15 @@ public class MainActivity extends AppCompatActivity {
     private ListView rdvListView;
 
     private List<RDV> rdvs;
+
+    private Handler handler = new Handler();
+    private Runnable checkRDVsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            checkAndUpdateRDVs();
+            handler.postDelayed(this, 60000); // Check every minute
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         // Récupération de tous les RDVs enregistrés
         List<RDV> rdvList = rdvDAO.getAllRDVs();
         rdvDAO.close();
-        //rdvAdapter = new RDVAdapter(MainActivity.this, rdvList);
-        //rdvListView.setAdapter(rdvAdapter);
+        rdvAdapter = new RDVAdapter(MainActivity.this, rdvList);
+        rdvListView.setAdapter(rdvAdapter);
 
         // Lorsqu'on clique sur un RDV, on peut le modifier
         rdvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -64,15 +71,30 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void refreshRDVList() {
+        rdvDAO.open();
+        rdvs = rdvDAO.getAllRDVs();
+        rdvDAO.close();
+        rdvAdapter = new RDVAdapter(this, rdvs);
+        rdvListView.setAdapter(rdvAdapter);
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        rdvDAO.open();
-        // Retrieve the latest RDVs from the database and update the RecyclerView
-        rdvs = rdvDAO.getAllRDVs();
-        rdvDAO.close();
-        RDVAdapter adapter = new RDVAdapter(this, rdvs);
-        rdvListView.setAdapter(adapter);
+
+        refreshRDVList();
+
+        handler.post(checkRDVsRunnable); // This line was missing
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(checkRDVsRunnable);
     }
 
     public static final int REQUEST_CODE_POST_NOTIFICATIONS = 1;
@@ -103,4 +125,23 @@ public class MainActivity extends AppCompatActivity {
         // Fermeture de la connexion à la base de données
         rdvDAO.close();
     }
+
+    private void checkAndUpdateRDVs() {
+        boolean updated = false;
+
+        for (RDV rdv : rdvs) {
+            if (!rdv.isDone() && RDV.isRDVOverdue(rdv.getDate(), rdv.getTime())) {
+                rdv.setDone(true);
+                rdvDAO.open();
+                rdvDAO.updateRDV(rdv);
+                rdvDAO.close();
+                updated = true;
+            }
+        }
+
+        if (updated) {
+            refreshRDVList();
+        }
+    }
+
 }

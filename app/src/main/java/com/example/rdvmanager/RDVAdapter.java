@@ -3,6 +3,7 @@ package com.example.rdvmanager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,13 @@ public class RDVAdapter extends BaseAdapter {
         }
 
         RDV rdv = rdvList.get(position);
+
+        String[] timeParts = rdv.getTime().split(":");
+        int hour = Integer.parseInt(timeParts[0]);
+        int minute = Integer.parseInt(timeParts[1]);
+        String formattedTime = String.format("%02d:%02d", hour, minute);
+        rdv.setTime(formattedTime);
+
         viewHolder.bind(rdv);
 
         return convertView;
@@ -63,6 +71,8 @@ public class RDVAdapter extends BaseAdapter {
     private class ViewHolder {
         private final TextView titleTextView;
         private final TextView dateTextView;
+
+        private final View statusIndicator;
         private final TextView contactTextView;
         private final View itemView;
 
@@ -71,12 +81,19 @@ public class RDVAdapter extends BaseAdapter {
             titleTextView = itemView.findViewById(R.id.textview_rdv_title);
             dateTextView = itemView.findViewById(R.id.textview_rdv_datetime);
             contactTextView = itemView.findViewById(R.id.textview_rdv_contact);
+            statusIndicator = itemView.findViewById(R.id.status_indicator);
         }
 
         public void bind(final RDV rdv) {
             titleTextView.setText(rdv.getTitle());
-            dateTextView.setText(rdv.getDate());
+            dateTextView.setText(rdv.getDate() +" "+rdv.getTime());
             contactTextView.setText(rdv.getContact());
+
+            if (rdv.isDone()) {
+                statusIndicator.setBackgroundColor(Color.RED);
+            } else {
+                statusIndicator.setBackgroundColor(Color.GREEN);
+            }
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, EditRDVActivity.class);

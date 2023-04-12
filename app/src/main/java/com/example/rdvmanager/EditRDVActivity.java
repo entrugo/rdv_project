@@ -152,6 +152,9 @@ public class EditRDVActivity extends AppCompatActivity {
                 rdvDAO.updateRDV(selectedRDV);
                 rdvDAO.close();
 
+                Intent intent = new Intent(EditRDVActivity.this, MainActivity.class);
+                startActivity(intent);
+
                 finish();
             }
         });

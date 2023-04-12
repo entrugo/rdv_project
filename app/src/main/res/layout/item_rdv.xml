@@ -24,4 +24,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceSmall" />
 
+    <View
+        android:id="@+id/status_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"/>
 </LinearLayout>

@@ -1,9 +1,9 @@
 package com.example.rdvmanager;
 
 import android.net.Uri;
-
-import androidx.annotation.NonNull;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class RDV {
@@ -112,6 +112,33 @@ public class RDV {
     public void setDone(boolean done) {
         isDone = done;
     }
+
+    //le rdv passe en isDone=true lorsque sa date est passé
+    public static boolean isRDVOverdue(String date, String time) {
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String dateTimeString = date + " " + time;
+
+        try {
+            Date rdvDateTime = dateTimeFormat.parse(dateTimeString);
+            Calendar calendar = Calendar.getInstance();
+            Date currentTime = calendar.getTime();
+
+            return rdvDateTime.before(currentTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //dans le cas ou un rdv passé est remis à plus tard, alors le rdv repasse en isDone=false
+    public static boolean resetIsDoneIfNeeded(RDV rdv) {
+        if (rdv.isDone() && !isRDVOverdue(rdv.getDate(), rdv.getTime())) {
+            rdv.setDone(false);
+            return true;
+        }
+        return false;
+    }
+
 
     public String toString() {
         return "Title: " + getTitle() + "\n" +
