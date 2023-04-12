@@ -124,7 +124,8 @@ public class RDVDAO {
                 RDVDBHelper.COLUMN_DATE,
                 RDVDBHelper.COLUMN_TIME,
                 RDVDBHelper.COLUMN_ADDRESS,
-                RDVDBHelper.COLUMN_PHONE_NUMBER
+                RDVDBHelper.COLUMN_PHONE_NUMBER,
+                RDVDBHelper.COLUMN_DESCRIPTION
         };
 
         String selection = RDVDBHelper.COLUMN_DATE + "=?";
@@ -146,10 +147,10 @@ public class RDVDAO {
             String dateStr = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DATE));
             String time = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_TIME));
             String location = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_ADDRESS));
-            String description = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DESCRIPTION));
             String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_PHONE_NUMBER));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(RDVDBHelper.COLUMN_DESCRIPTION));
 
-            RDV rdv = new RDV(id, title, dateStr, time, location,phoneNumber, description, true);
+            RDV rdv = new RDV(id, title, dateStr, time, location, phoneNumber, description, true);
             rdvs.add(rdv);
         }
 

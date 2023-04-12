@@ -47,7 +47,7 @@ public class AddRDVActivity extends AppCompatActivity {
     static int REQUEST_CODE = 200;
     static int delay;
 
-    @SuppressLint("MissingInflatedId")
+    //@SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +75,7 @@ public class AddRDVActivity extends AppCompatActivity {
                 String address = mAddressEditText.getText().toString();
                 String contact = mContactEditText.getText().toString();
                 int year = mDatePicker.getYear();
-                int month = mDatePicker.getMonth();
+                int month = mDatePicker.getMonth()+1;
                 int day = mDatePicker.getDayOfMonth();
                 int hour = mTimePicker.getHour();
                 int minute = mTimePicker.getMinute();

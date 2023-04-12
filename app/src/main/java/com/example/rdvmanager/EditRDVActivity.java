@@ -27,6 +27,8 @@ public class EditRDVActivity extends AppCompatActivity {
     private DatePicker mDateEditText;
     private TimePicker mTimeEditText;
     private EditText mPhoneEditText;
+
+    private EditText mContactEditText;
     private TextView mStatus;
     private Button mSaveButton;
     private Button mDeleteButton;
@@ -59,10 +61,43 @@ public class EditRDVActivity extends AppCompatActivity {
         }
         rdvDAO.close();
 
+        // Date and Time
+        String date = selectedRDV.getDate();
+        String time = selectedRDV.getTime();
+
+// Split the date and time strings to extract the individual components
+        String[] dateParts = date.split("/");
+        String[] timeParts = time.split(":");
+
+        int day = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]) - 1; // Subtract 1 since months are indexed from 0
+        int year = Integer.parseInt(dateParts[2]);
+        int hour = Integer.parseInt(timeParts[0]);
+        int minute = Integer.parseInt(timeParts[1]);
+
+        // Date
+        mDateEditText = findViewById(R.id.edit_date_picker);
+        // Time
+        mTimeEditText = findViewById(R.id.edit_time_picker);
+// Set the date and time values in the DatePicker and TimePicker
+        if (mDateEditText != null) {
+            mDateEditText.updateDate(year, month, day);
+        }
+
+        if (mTimeEditText != null) {
+            mTimeEditText.setHour(hour);
+            mTimeEditText.setMinute(minute);
+        }
+
         // On met à jour le xml avec les informations du RDV sélectionné
         mTitleEditText = findViewById(R.id.edit_title);
         if (selectedRDV != null && mTitleEditText != null) {
             mTitleEditText.setText(selectedRDV.getTitle());
+        }
+        // Contact
+        mContactEditText = findViewById(R.id.edit_contact);
+        if (selectedRDV != null && mContactEditText != null) {
+            mContactEditText.setText(selectedRDV.getContact());
         }
         // Description
         mDescriptionEditText = findViewById(R.id.edit_description);
@@ -74,10 +109,7 @@ public class EditRDVActivity extends AppCompatActivity {
         if (selectedRDV != null && mLocationEditText != null) {
             mLocationEditText.setText(selectedRDV.getAddress());
         }
-        // Date
-        mDateEditText = findViewById(R.id.edit_date_picker);
-        // Time
-        mTimeEditText = findViewById(R.id.edit_time_picker);
+
         // Num. téléphone
         mPhoneEditText = findViewById(R.id.edit_phone);
         if (selectedRDV != null && mPhoneEditText != null) {
@@ -100,19 +132,27 @@ public class EditRDVActivity extends AppCompatActivity {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    selectedRDV.setTitle(mTitleEditText.getText().toString());
-                    selectedRDV.setDescription(mDescriptionEditText.getText().toString());
-                    selectedRDV.setPhoneNumber(mPhoneEditText.getText().toString());
-                    selectedRDV.setAddress(mLocationEditText.getText().toString());
-                    selectedRDV.setDate(mDateEditText.getDayOfMonth() + "/" + mDateEditText.getMonth() + "/" + mDateEditText.getYear());
-                    selectedRDV.setTime(mTimeEditText.getHour() + ":" +mTimeEditText.getMinute());
+                selectedRDV.setTitle(mTitleEditText.getText().toString());
+                selectedRDV.setDescription(mDescriptionEditText.getText().toString());
+                selectedRDV.setPhoneNumber(mPhoneEditText.getText().toString());
+                selectedRDV.setAddress(mLocationEditText.getText().toString());
+                selectedRDV.setContact(mContactEditText.getText().toString());
 
-                    RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
-                    rdvDAO.open();
-                    rdvDAO.updateRDV(selectedRDV);
-                    rdvDAO.close();
+                int year = mDateEditText.getYear();
+                int month = mDateEditText.getMonth()+1;
+                int day = mDateEditText.getDayOfMonth();
+                int hour = mTimeEditText.getHour();
+                int minute = mTimeEditText.getMinute();
 
-                    finish();
+                selectedRDV.setDate("" + day + "/" + month + "/" + year);
+                selectedRDV.setTime("" + hour + ":" + minute);
+
+                RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
+                rdvDAO.open();
+                rdvDAO.updateRDV(selectedRDV);
+                rdvDAO.close();
+
+                finish();
             }
         });
 
