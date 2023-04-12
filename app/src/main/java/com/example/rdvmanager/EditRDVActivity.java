@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class EditRDVActivity extends AppCompatActivity {
     private DatePicker mDateEditText;
     private TimePicker mTimeEditText;
     private EditText mPhoneEditText;
+    private TextView mStatus;
     private Button mSaveButton;
     private Button mLocationButton;
     private Button mPhoneButton;
@@ -42,7 +44,7 @@ public class EditRDVActivity extends AppCompatActivity {
         // Get the RDV ID from the intent extras
         long rdvId = getIntent().getExtras().getLong("rdv_Id", -1);
         if (rdvId == -1) {
-            Toast.makeText(this, "Erreur : ID du RDV non fourni", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error : ID from RDV unprovided", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -51,7 +53,7 @@ public class EditRDVActivity extends AppCompatActivity {
         rdvDAO.open();
         RDV selectedRDV = rdvDAO.getRDVById(rdvId);
         if (selectedRDV == null) {
-            Toast.makeText(this, "Erreur : RDV introuvable", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error : RDV not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -81,6 +83,10 @@ public class EditRDVActivity extends AppCompatActivity {
         if (selectedRDV != null && mPhoneEditText != null) {
             mPhoneEditText.setText(String.valueOf(selectedRDV.getPhoneNumber()));
         }
+        // Status
+        mStatus = findViewById(R.id.textView_RDVStatus);
+        if(selectedRDV.isDone()) mStatus.setText("RDV is done.");
+        else mStatus.setText("RDV is not done.");
 
         mDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override

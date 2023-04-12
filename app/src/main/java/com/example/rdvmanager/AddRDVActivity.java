@@ -1,5 +1,6 @@
 package com.example.rdvmanager;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -31,6 +32,7 @@ import java.util.Date;
 public class AddRDVActivity extends AppCompatActivity {
 
     private EditText mTitleEditText;
+    private EditText mPhoneNumber;
     private EditText mDescriptionEditText;
     private EditText mAddressEditText;
     private EditText mContactEditText;
@@ -39,14 +41,13 @@ public class AddRDVActivity extends AppCompatActivity {
     private RadioButton mChoice1;
     private RadioButton mChoice2;
     private RadioButton mChoice3;
-
-    static int delay;
-
     // Notifications
     static String CHANNEL_ID = "channel_01";
     static int NOTIFICATION_ID = 100;
     static int REQUEST_CODE = 200;
+    static int delay;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class AddRDVActivity extends AppCompatActivity {
 
         mTitleEditText = findViewById(R.id.editTextTitle);
         mDescriptionEditText = findViewById(R.id.editTextDescription);
+        mPhoneNumber = findViewById(R.id.editTextPhone);
         mAddressEditText = findViewById(R.id.editTextAddress);
         mContactEditText = findViewById(R.id.editTextContact);
         mDatePicker = findViewById(R.id.datePicker);
@@ -69,6 +71,7 @@ public class AddRDVActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String title = mTitleEditText.getText().toString();
                 String description = mDescriptionEditText.getText().toString();
+                String phoneNumber = mPhoneNumber.getText().toString();
                 String address = mAddressEditText.getText().toString();
                 String contact = mContactEditText.getText().toString();
                 int year = mDatePicker.getYear();
@@ -77,9 +80,7 @@ public class AddRDVActivity extends AppCompatActivity {
                 int hour = mTimePicker.getHour();
                 int minute = mTimePicker.getMinute();
 
-
-
-                if(mChoice1.isChecked()) delay = 5000; // 86400000 // 1 day
+                if(mChoice1.isChecked()) delay = 86400000; // 1 day
                 if(mChoice2.isChecked()) delay = 172800000; // 2 days
                 if(mChoice3.isChecked()) delay = 604800000; // 1 week
 
@@ -89,9 +90,10 @@ public class AddRDVActivity extends AppCompatActivity {
                 }
 
                 // Ajout notification
-                CreateNotification(view, delay);
+                if(!mChoice1.isChecked() && !mChoice2.isChecked() && !mChoice3.isChecked()) ;
+                else CreateNotification(view, delay);
 
-                RDV rdv = new RDV(title, "" + day + "/" + month + "/" + year, "" + hour + ":" + minute, contact, address, description, false);
+                RDV rdv = new RDV(title, "" + day + "/" + month + "/" + year, "" + hour + ":" + minute, contact, address, phoneNumber, false);
 
                 RDVDAO rdvDAO = new RDVDAO(getApplicationContext());
                 rdvDAO.open();
