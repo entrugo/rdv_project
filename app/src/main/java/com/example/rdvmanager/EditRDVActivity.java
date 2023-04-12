@@ -1,6 +1,7 @@
 package com.example.rdvmanager;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,8 +29,7 @@ public class EditRDVActivity extends AppCompatActivity {
     private EditText mPhoneEditText;
     private TextView mStatus;
     private Button mSaveButton;
-    private Button mLocationButton;
-    private Button mPhoneButton;
+    private Button mDeleteButton;
 
     private int mYear;
     private int mMonth;
@@ -86,7 +86,7 @@ public class EditRDVActivity extends AppCompatActivity {
         // Status
         mStatus = findViewById(R.id.textView_RDVStatus);
         if(selectedRDV.isDone()) mStatus.setText("RDV is done.");
-        else mStatus.setText("RDV is not done.");
+        else mStatus.setText("RDV is not done yet.");
 
         mDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +102,7 @@ public class EditRDVActivity extends AppCompatActivity {
             public void onClick(View v) {
                     selectedRDV.setTitle(mTitleEditText.getText().toString());
                     selectedRDV.setDescription(mDescriptionEditText.getText().toString());
+                    selectedRDV.setPhoneNumber(mPhoneEditText.getText().toString());
                     selectedRDV.setAddress(mLocationEditText.getText().toString());
                     selectedRDV.setDate(mDateEditText.getDayOfMonth() + "/" + mDateEditText.getMonth() + "/" + mDateEditText.getYear());
                     selectedRDV.setTime(mTimeEditText.getHour() + ":" +mTimeEditText.getMinute());
@@ -112,6 +113,27 @@ public class EditRDVActivity extends AppCompatActivity {
                     rdvDAO.close();
 
                     finish();
+            }
+        });
+
+        // Delete button
+        mDeleteButton = findViewById(R.id.button_delete);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditRDVActivity.this);
+                builder.setTitle("Confirmation de suppression");
+                builder.setMessage("Etes-vous sûr de vouloir supprimer ce RDV ?");
+                builder.setPositiveButton("Oui", (dialog, which) -> {
+                    // supprimer le RDV de la base de données et de la liste
+                    RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
+                    rdvDAO.open();
+                    rdvDAO.deleteRDV(selectedRDV);
+                    rdvDAO.close();
+                    setContentView(R.layout.activity_main);
+                });
+                builder.setNegativeButton("Non", null);
+                builder.show();
             }
         });
     }

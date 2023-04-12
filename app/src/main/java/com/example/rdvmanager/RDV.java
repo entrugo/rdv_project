@@ -24,6 +24,7 @@ public class RDV {
         this.time = null;
         this.contact = null;
         this.address = null;
+        this.description = null;
         this.phoneNumber = null;
         this.isDone = false;
     }
