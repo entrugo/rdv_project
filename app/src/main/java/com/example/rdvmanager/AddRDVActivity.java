@@ -29,7 +29,7 @@ import androidx.core.content.ContextCompat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AddRDVActivity extends AppCompatActivity {
+public class AddRDVActivity extends BaseActivity {
 
     private EditText mTitleEditText;
     private EditText mPhoneNumber;

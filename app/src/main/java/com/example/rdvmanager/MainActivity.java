@@ -14,11 +14,13 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private RDVDAO rdvDAO;
     private RDVAdapter rdvAdapter;
     private ListView rdvListView;
+
+    private static int visibleActivityCount = 0;
 
     private List<RDV> rdvs;
 
@@ -79,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         rdvListView.setAdapter(rdvAdapter);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -88,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
         handler.post(checkRDVsRunnable); // This line was missing
     }
-
-
 
     @Override
     protected void onPause() {

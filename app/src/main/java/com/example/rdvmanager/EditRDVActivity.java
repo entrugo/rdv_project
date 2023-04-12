@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class EditRDVActivity extends AppCompatActivity {
+public class EditRDVActivity extends BaseActivity {
 
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
