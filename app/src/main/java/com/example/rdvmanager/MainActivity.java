@@ -29,7 +29,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void run() {
             checkAndUpdateRDVs();
-            handler.postDelayed(this, 60000); // Check every minute
+            handler.postDelayed(this, 1000); // Check every minute
         }
     };
 

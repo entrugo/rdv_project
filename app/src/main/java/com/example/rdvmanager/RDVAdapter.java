@@ -90,9 +90,9 @@ public class RDVAdapter extends BaseAdapter {
             contactTextView.setText(rdv.getContact());
 
             if (rdv.isDone()) {
-                statusIndicator.setBackgroundColor(Color.RED);
-            } else {
                 statusIndicator.setBackgroundColor(Color.GREEN);
+            } else {
+                statusIndicator.setBackgroundColor(Color.CYAN);
             }
 
             itemView.setOnClickListener(v -> {

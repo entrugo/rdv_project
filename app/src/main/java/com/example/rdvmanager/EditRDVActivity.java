@@ -173,7 +173,9 @@ public class EditRDVActivity extends BaseActivity {
                     rdvDAO.open();
                     rdvDAO.deleteRDV(selectedRDV);
                     rdvDAO.close();
-                    setContentView(R.layout.activity_main);
+                    Intent intent = new Intent(EditRDVActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 });
                 builder.setNegativeButton("Non", null);
                 builder.show();
