@@ -14,16 +14,12 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Check if the app has the required permission
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            // Build the notification
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle(intent.getStringExtra("title"))
                     .setContentText(intent.getStringExtra("description"))
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            // Show the notification
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(intent.getIntExtra("notificationId", 0), builder.build());
         } else {

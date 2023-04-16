@@ -12,7 +12,7 @@
             android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"/>
+            android:hint="Titre"/>
 
         <EditText
             android:id="@+id/editTextContact"
@@ -38,7 +38,7 @@
             android:id="@+id/editTextAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Address"
+            android:hint="Adresse"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:padding="8dp"
@@ -48,17 +48,26 @@
             android:id="@+id/editTextPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone number"
+            android:hint="Numero de téléphone"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:padding="8dp"
             android:minHeight="48dp"/>
 
+        <Button
+            android:id="@+id/pick_contact_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Importer Contact"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="requestReadContactsPermission" />
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Get notified before :" />
+            android:text="Recevoir la notification avant :" />
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -70,19 +79,19 @@
                 android:id="@+id/choice1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1 day"/>
+                android:text="1 jour"/>
 
             <RadioButton
                 android:id="@+id/choice2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 days"/>
+                android:text="2 jours"/>
 
             <RadioButton
                 android:id="@+id/choice3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1 week"/>
+                android:text="1 semaine"/>
 
         </RadioGroup>
 
@@ -100,7 +109,7 @@
             android:id="@+id/buttonSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:text="Sauvegarder" />
 
     </LinearLayout>
 

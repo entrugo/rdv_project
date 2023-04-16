@@ -45,13 +45,12 @@ public class MainActivity extends BaseActivity {
         rdvDAO = new RDVDAO(this);
         rdvListView = findViewById(R.id.rdv_listview);
         rdvDAO.open();
-        // Récupération de tous les RDVs enregistrés
         List<RDV> rdvList = rdvDAO.getAllRDVs();
         rdvDAO.close();
         rdvAdapter = new RDVAdapter(MainActivity.this, rdvList);
         rdvListView.setAdapter(rdvAdapter);
 
-        // Lorsqu'on clique sur un RDV, on peut le modifier
+
         rdvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -64,10 +63,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    /**
-     * Appelée lorsqu'on clique sur le bouton "Ajouter un RDV"
-     * @param view la vue actuelle
-     */
     public void onAddRDVClick(View view) {
         Intent intent = new Intent(this, AddRDVActivity.class);
         startActivity(intent);
@@ -87,7 +82,7 @@ public class MainActivity extends BaseActivity {
 
         refreshRDVList();
 
-        handler.post(checkRDVsRunnable); // This line was missing
+        handler.post(checkRDVsRunnable);
     }
 
     @Override
@@ -107,10 +102,8 @@ public class MainActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_POST_NOTIFICATIONS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted, you can show the notification now
                 } else {
-                    // Permission denied, show an explanation or disable the feature
-                    Toast.makeText(this, "Permission to show notifications was denied.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission de montrer les notifications refusée", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -121,7 +114,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Fermeture de la connexion à la base de données
         rdvDAO.close();
     }
 

@@ -10,7 +10,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title:"
+            android:text="Titre:"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:hint="Enter RDV title"
+            android:hint="Entrer un titre"
             android:minHeight="48dp"
             android:padding="8dp" />
 
@@ -28,7 +28,7 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="RDV status :"
+            android:text="Etat du RDV:"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:hint="RDV Status"
+            android:hint="Statut du RDV"
             android:minHeight="48dp"
             android:padding="8dp" />
 
@@ -57,7 +57,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time:"
+            android:text="Horaire:"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -69,7 +69,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address :"
+            android:text="Adresse:"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -77,20 +77,20 @@
             android:id="@+id/edit_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter RDV location" />
+            android:hint="Entrer l'adresse du RDV" />
 
         <Button
             android:id="@+id/button_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="launchMaps"
-            android:text="See in map" />
+            android:text="Voir sur Google Map" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Phone Number :"
+            android:text="Numéro de téléphone:"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -98,19 +98,19 @@
             android:id="@+id/edit_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter phone number" />
+            android:hint="Entrer un numéro de téléphone" />
 
         <Button
             android:id="@+id/button_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="launchPhoneCall"
-            android:text="Call" />
+            android:text="Appeler" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contact :"
+            android:text="Contact:"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -133,19 +133,19 @@
             android:id="@+id/edit_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter RDV description" />
+            android:hint="Entrer une description" />
 
         <Button
             android:id="@+id/button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:text="Sauvegarder" />
 
         <Button
             android:id="@+id/button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete" />
+            android:text="Supprimer" />
 
     </LinearLayout>
 </ScrollView>

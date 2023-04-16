@@ -63,10 +63,6 @@ public class RDVAdapter extends BaseAdapter {
         return convertView;
     }
 
-    /**public void updateRDVs(List<RDV> rdvList) {
-        this.rdvList = rdvList;
-        notifyDataSetChanged();
-    }**/
 
     private class ViewHolder {
         private final TextView titleTextView;

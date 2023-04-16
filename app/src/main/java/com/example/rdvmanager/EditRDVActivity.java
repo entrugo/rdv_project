@@ -13,29 +13,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.text.DateFormat;
 import java.util.Calendar;
 
 public class EditRDVActivity extends BaseActivity {
 
-    private EditText mTitleEditText;
-    private EditText mDescriptionEditText;
-    private EditText mLocationEditText;
-    private DatePicker mDateEditText;
-    private TimePicker mTimeEditText;
-    private EditText mPhoneEditText;
+    private EditText titleEditText;
+    private EditText descriptionEditText;
+    private EditText locationEditText;
+    private DatePicker dateEditText;
+    private TimePicker timeEditText;
+    private EditText phoneEditText;
 
-    private EditText mContactEditText;
-    private TextView mStatus;
-    private Button mSaveButton;
-    private Button mDeleteButton;
+    private EditText contactEditText;
+    private TextView status;
+    private Button saveButton;
+    private Button deleteButton;
 
-    private int mYear;
-    private int mMonth;
-    private int mDay;
+    private int aYear;
+    private int aMonth;
+    private int aDay;
 
     @SuppressLint({"WrongViewCast"})
     @Override
@@ -43,14 +39,12 @@ public class EditRDVActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rdv);
 
-        // Get the RDV ID from the intent extras
         long rdvId = getIntent().getExtras().getLong("rdv_Id", -1);
         if (rdvId == -1) {
             Toast.makeText(this, "Error : ID from RDV unprovided", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-        // Get the RDV from the database
         RDVDAO rdvDAO = new RDVDAO(this);
         rdvDAO.open();
         RDV selectedRDV = rdvDAO.getRDVById(rdvId);
@@ -60,89 +54,81 @@ public class EditRDVActivity extends BaseActivity {
             return;
         }
         rdvDAO.close();
-
-        // Date and Time
         String date = selectedRDV.getDate();
         String time = selectedRDV.getTime();
-
-// Split the date and time strings to extract the individual components
         String[] dateParts = date.split("/");
         String[] timeParts = time.split(":");
 
         int day = Integer.parseInt(dateParts[0]);
-        int month = Integer.parseInt(dateParts[1]) - 1; // Subtract 1 since months are indexed from 0
+        int month = Integer.parseInt(dateParts[1]) - 1;
         int year = Integer.parseInt(dateParts[2]);
         int hour = Integer.parseInt(timeParts[0]);
         int minute = Integer.parseInt(timeParts[1]);
 
-        // Date
-        mDateEditText = findViewById(R.id.edit_date_picker);
-        // Time
-        mTimeEditText = findViewById(R.id.edit_time_picker);
-// Set the date and time values in the DatePicker and TimePicker
-        if (mDateEditText != null) {
-            mDateEditText.updateDate(year, month, day);
+
+        dateEditText = findViewById(R.id.edit_date_picker);
+        timeEditText = findViewById(R.id.edit_time_picker);
+        if (dateEditText != null) {
+            dateEditText.updateDate(year, month, day);
         }
 
-        if (mTimeEditText != null) {
-            mTimeEditText.setHour(hour);
-            mTimeEditText.setMinute(minute);
+        if (timeEditText != null) {
+            timeEditText.setHour(hour);
+            timeEditText.setMinute(minute);
         }
 
-        // On met à jour le xml avec les informations du RDV sélectionné
-        mTitleEditText = findViewById(R.id.edit_title);
-        if (selectedRDV != null && mTitleEditText != null) {
-            mTitleEditText.setText(selectedRDV.getTitle());
-        }
-        // Contact
-        mContactEditText = findViewById(R.id.edit_contact);
-        if (selectedRDV != null && mContactEditText != null) {
-            mContactEditText.setText(selectedRDV.getContact());
-        }
-        // Description
-        mDescriptionEditText = findViewById(R.id.edit_description);
-        if (selectedRDV != null && mDescriptionEditText != null) {
-            mDescriptionEditText.setText(selectedRDV.getDescription());
-        }
-        // Adresse
-        mLocationEditText = findViewById(R.id.edit_location);
-        if (selectedRDV != null && mLocationEditText != null) {
-            mLocationEditText.setText(selectedRDV.getAddress());
+        titleEditText = findViewById(R.id.edit_title);
+        if (selectedRDV != null && titleEditText != null) {
+            titleEditText.setText(selectedRDV.getTitle());
         }
 
-        // Num. téléphone
-        mPhoneEditText = findViewById(R.id.edit_phone);
-        if (selectedRDV != null && mPhoneEditText != null) {
-            mPhoneEditText.setText(String.valueOf(selectedRDV.getPhoneNumber()));
+        contactEditText = findViewById(R.id.edit_contact);
+        if (selectedRDV != null && contactEditText != null) {
+            contactEditText.setText(selectedRDV.getContact());
         }
-        // Status
-        mStatus = findViewById(R.id.textView_RDVStatus);
-        if(selectedRDV.isDone()) mStatus.setText("RDV is done.");
-        else mStatus.setText("RDV is not done yet.");
 
-        mDateEditText.setOnClickListener(new View.OnClickListener() {
+        descriptionEditText = findViewById(R.id.edit_description);
+        if (selectedRDV != null && descriptionEditText != null) {
+            descriptionEditText.setText(selectedRDV.getDescription());
+        }
+
+        locationEditText = findViewById(R.id.edit_location);
+        if (selectedRDV != null && locationEditText != null) {
+            locationEditText.setText(selectedRDV.getAddress());
+        }
+
+
+        phoneEditText = findViewById(R.id.edit_phone);
+        if (selectedRDV != null && phoneEditText != null) {
+            phoneEditText.setText(String.valueOf(selectedRDV.getPhoneNumber()));
+        }
+
+        status = findViewById(R.id.textView_RDVStatus);
+        if(selectedRDV.isDone()) status.setText("Le RDV est passé.");
+        else status.setText("Le RDV n'a pas encore eu lieu.");
+
+        dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog();
             }
         });
 
-        // Initialize the Save button and set its onClick listener to update the RDV in the database and return to the main activity
-        mSaveButton = findViewById(R.id.button_save);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
+        saveButton = findViewById(R.id.button_save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedRDV.setTitle(mTitleEditText.getText().toString());
-                selectedRDV.setDescription(mDescriptionEditText.getText().toString());
-                selectedRDV.setPhoneNumber(mPhoneEditText.getText().toString());
-                selectedRDV.setAddress(mLocationEditText.getText().toString());
-                selectedRDV.setContact(mContactEditText.getText().toString());
+                selectedRDV.setTitle(titleEditText.getText().toString());
+                selectedRDV.setDescription(descriptionEditText.getText().toString());
+                selectedRDV.setPhoneNumber(phoneEditText.getText().toString());
+                selectedRDV.setAddress(locationEditText.getText().toString());
+                selectedRDV.setContact(contactEditText.getText().toString());
 
-                int year = mDateEditText.getYear();
-                int month = mDateEditText.getMonth()+1;
-                int day = mDateEditText.getDayOfMonth();
-                int hour = mTimeEditText.getHour();
-                int minute = mTimeEditText.getMinute();
+                int year = dateEditText.getYear();
+                int month = dateEditText.getMonth()+1;
+                int day = dateEditText.getDayOfMonth();
+                int hour = timeEditText.getHour();
+                int minute = timeEditText.getMinute();
 
                 selectedRDV.setDate("" + day + "/" + month + "/" + year);
                 selectedRDV.setTime("" + hour + ":" + minute);
@@ -159,16 +145,15 @@ public class EditRDVActivity extends BaseActivity {
             }
         });
 
-        // Delete button
-        mDeleteButton = findViewById(R.id.button_delete);
-        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+        deleteButton = findViewById(R.id.button_delete);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditRDVActivity.this);
                 builder.setTitle("Confirmation de suppression");
                 builder.setMessage("Etes-vous sûr de vouloir supprimer ce RDV ?");
                 builder.setPositiveButton("Oui", (dialog, which) -> {
-                    // supprimer le RDV de la base de données et de la liste
+
                     RDVDAO rdvDAO = new RDVDAO(EditRDVActivity.this);
                     rdvDAO.open();
                     rdvDAO.deleteRDV(selectedRDV);
@@ -184,7 +169,7 @@ public class EditRDVActivity extends BaseActivity {
     }
 
     public void launchMaps(View view) {
-        String map = "http://maps.google.co.in/maps?q=" + mLocationEditText.getText().toString() ;
+        String map = "http://maps.google.co.in/maps?q=" + locationEditText.getText().toString() ;
         Uri gmmIntentUri = Uri.parse(map);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
@@ -193,25 +178,29 @@ public class EditRDVActivity extends BaseActivity {
 
     public void launchPhoneCall(View view) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + mPhoneEditText.getText()));
+        intent.setData(Uri.parse("tel:" + phoneEditText.getText()));
         startActivity(intent);
     }
 
 
     private void showDatePickerDialog() {
         final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
+        aYear = c.get(Calendar.YEAR);
+        aMonth = c.get(Calendar.MONTH);
+        aDay = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                mDateEditText.updateDate(year,month,day);
+                dateEditText.updateDate(year,month,day);
             }
-        }, mYear, mMonth, mDay);
+        }, aYear, aMonth, aDay);
 
         datePickerDialog.show();
     }
+
+
+
+
 }
 

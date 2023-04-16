@@ -113,7 +113,6 @@ public class RDV {
         isDone = done;
     }
 
-    //le rdv passe en isDone=true lorsque sa date est passé
     public static boolean isRDVOverdue(String date, String time) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String dateTimeString = date + " " + time;
@@ -129,8 +128,6 @@ public class RDV {
             return false;
         }
     }
-
-    //dans le cas ou un rdv passé est remis à plus tard, alors le rdv repasse en isDone=false
     public static boolean resetIsDoneIfNeeded(RDV rdv) {
         if (rdv.isDone() && !isRDVOverdue(rdv.getDate(), rdv.getTime())) {
             rdv.setDone(false);
